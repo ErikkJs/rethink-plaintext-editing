@@ -7,8 +7,11 @@ import classNames from 'classnames';
 import { listFiles } from '../files';
 
 // Used below, these need to be registered
-import MarkdownEditor from '../MarkdownEditor';
-import PlaintextEditor from '../components/PlaintextEditor';
+import MarkdownEditor from '../components/MarkdownEditor/MarkdownEditor';
+import PlaintextEditor from '../components/PlaintextEditor/PlaintextEditor';
+import CodeEditor from '../components/CodeEditor/CodeEditor';
+
+import Previewer from "../components/Previewer/Previewer";
 
 import IconPlaintextSVG from '../public/icon-plaintext.svg';
 import IconMarkdownSVG from '../public/icon-markdown.svg';
@@ -16,6 +19,8 @@ import IconJavaScriptSVG from '../public/icon-javascript.svg';
 import IconJSONSVG from '../public/icon-json.svg';
 
 import css from './style.module.css';
+import { ToastProvider } from 'react-toast-notifications'
+
 
 const TYPE_TO_ICON = {
   'text/plain': IconPlaintextSVG,
@@ -76,24 +81,8 @@ FilesTable.propTypes = {
   setActiveFile: PropTypes.func
 };
 
-function Previewer({ file }) {
-  const [value, setValue] = useState('');
 
-  useEffect(() => {
-    (async () => {
-      setValue(await file.text());
-    })();
-  }, [file]);
-
-  return (
-    <div className={css.preview}>
-      <div className={css.title}>{path.basename(file.name)}</div>
-      <div className={css.content}>{value}</div>
-    </div>
-  );
-}
-
-Previewer.propTypes = {
+Previewer.propTypes = { 
   file: PropTypes.object
 };
 
@@ -101,6 +90,8 @@ Previewer.propTypes = {
 const REGISTERED_EDITORS = {
    "text/plain": PlaintextEditor,
    "text/markdown": MarkdownEditor,
+  'text/javascript': CodeEditor
+
 };
 
 function PlaintextFilesChallenge() {
@@ -112,18 +103,12 @@ function PlaintextFilesChallenge() {
     setFiles(files);
   }, []);
 
-  const write = async (file, newContent) => {
-    console.log('Writing soon... ', file.name);
+  const write = async(file) => {
+    // a quick easy extremely bad practice of a save function
     let fileIndex = await files.findIndex((currentFile) => currentFile.name == file.name );
-    const FileToAdd = new File(
-      [`${newContent}`],
-      `${file.name}`,
-      {
-        type: `${file.type}`,
-        lastModified: new Date('2011-07-29T16:01:35')
-      }
-    );
-    files[fileIndex] = FileToAdd;
+    let filesToSet = files;
+    filesToSet.splice(fileIndex,1,file);
+    setFiles(filesToSet);
   };
 
   const Editor = activeFile ? REGISTERED_EDITORS[activeFile.type] : null;
@@ -161,6 +146,7 @@ function PlaintextFilesChallenge() {
           </div>
         </footer>
       </aside>
+      <ToastProvider>
 
       <main className={css.editorWindow}>
         {activeFile && (
@@ -174,6 +160,8 @@ function PlaintextFilesChallenge() {
           <div className={css.empty}>Select a file to view or edit</div>
         )}
       </main>
+      </ToastProvider>
+
     </div>
   );
 }

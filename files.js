@@ -44,7 +44,8 @@ Thanks for trying our challenge!
     [
       `# Some Markdown that could be rendered and HTML
 
-The *quick* brown fox, jumped **over** the lazy [dog](https://en.wikipedia.org/wiki/Dog).`
+The *quick* brown fox, jumped **over** the lazy 
+[dog](https://en.wikipedia.org/wiki/Dog).`
     ],
     '/fancy.md',
     {
