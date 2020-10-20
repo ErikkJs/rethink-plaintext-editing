@@ -4,11 +4,15 @@
   "description": "",
   "main": "index.js",
   "dependencies": {
+    "@ckeditor/ckeditor5-build-classic": "^23.0.0",
+    "@ckeditor/ckeditor5-react": "^2.1.0",
+    "@uiw/react-md-editor": "^1.14.5",
     "@zeit/next-css": "^1.0.1",
     "classnames": "^2.2.6",
     "lodash": "^4.17.19",
-    "next": "^9.5.1",
+    "next": "^9.5.5",
     "react": "^16.13.1",
+    "react-ckeditor-component": "^1.1.0",
     "react-dom": "^16.13.1"
   },
   "devDependencies": {

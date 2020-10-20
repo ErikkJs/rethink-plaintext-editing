@@ -1,14 +1,30 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
-
-import css from './style.css';
+import css from './PlaintextEditor.module.css';
+import path from 'path';
+import CKEditor from 'react-ckeditor-component';
 
 function PlaintextEditor({ file, write }) {
-  console.log(file, write);
+  const [fileText, setText] = useState('');
+  useEffect(() => {
+    file.text().then(res => setText(res));
+  });
+  let onChange = (evt) => {
+    console.log("onChange fired with event info: ", evt);
+    const newContent = evt.editor.getData();
+    console.log(newContent)
+    write(file,newContent)
+  }
   return (
     <div className={css.editor}>
-      <h3>TODO</h3>
-      <i>text/plain</i>
+      <div className={css.title}>{path.basename(file.name)}</div>
+      <CKEditor
+        activeClass="p10"
+        content={fileText}
+        events={{
+          "change": onChange
+        }}
+      />
     </div>
   );
 }
